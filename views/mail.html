@@ -1,0 +1,143 @@
+{% include "./header.html"%}
+  <div class="row">
+    <div class="row">
+      <div class="col s2 offset-s2">
+        <p class="white-text"><a class="btn grey lighten-4 black-text" href="#"><i class="large material-icons">comment</i></a> - Edit Tags</p>
+      </div>
+      <div class="col s2">
+        <p class="white-text"><a class="btn grey lighten-4 black-text" href="#"><i class="large material-icons">perm_identity</i></a> - Assign User</p>
+      </div>
+      <div class="col s2">
+        <p class="white-text"><a class="btn grey lighten-4 black-text" href="#"><i class="large material-icons">done</i></a> - Close Case</p>
+      </div>
+      <div class="col s2">
+        <p class="white-text"><a class="btn grey lighten-4 black-text" href="#"><i class="large material-icons">not_interested</i></a> - Open Case</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s1 white-text">
+        <p>Search: </p>
+      </div>
+      <div class="col s8">
+        <input type="text"/>
+      </div>
+      <div class="col s2">
+        <select>
+          <option></option>
+          <option>Author</option>
+          <option>Subject</option>
+          <option>Body</option>
+          <option>Tags</option>
+        </select>
+      </div>
+      <div class="col s1">
+         <a class="btn grey lighten-4 black-text"><i class="large material-icons">search</i></a>
+      </div>
+    </div>
+    <table class="white-text responsive-table">
+      <thead>
+        <th>Author</th>
+        <th>Subject</th>
+        <th>Tags</th>
+        <th>Assigned</th>
+        <th>Status</th>
+        <th>Body</th>
+        <th>Replies</th>
+        <th>Action</th>
+      </thead>
+      <tbody>
+        {%for message in mail%}
+            <tr id="row-{{message.id}}">
+              <td>{{message.author}}</td>
+              <td>{{message.subject}}</td>
+              <td>{{message.tags}}</td>
+              <td>{{message.assigned_to}}</td>
+              <td>
+                {%if message.open == false%}
+                Closed
+                {%else%}
+                Open
+                {%endif%}
+              </td>
+              <td>
+                <a class="btn grey lighten-4 black-text modal-trigger" href="#modal-body-{{message.id}}">View</a>
+                <div id="modal-body-{{message.id}}" class="modal">
+                  <div class="modal-content black-text">
+                    <h4>{{message.subject}} - Body</h4>
+                    <hr>
+                    <p>{%markdown%}{{message.body}}{%endmarkdown%}</p>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="#!" class="modal-close btn grey lighten-4 black-text">Close</a>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <a class="btn grey lighten-4 black-text modal-trigger" href="#modal-replies-{{message.id}}">View</a>
+                <div id="modal-replies-{{message.id}}" class="modal">
+                  <div class="modal-content black-text">
+                    <h4>{{message.subject}} - Replies</h4>
+                    <hr>
+                    {%for reply in message.replies%}
+                      <h5>{{reply.data.author}} {%if reply.data.distinguished == "moderator"%}<img src="../../img/mod.png" />{%endif%}</h5>
+                      <p>{%markdown%}{{reply.data.body}}{%endmarkdown%}</p>
+                      <hr>
+                    {%endfor%}
+                    {%if !message.replies[0]%}
+                      <p>No results found.</p>
+                    {%endif%}
+                  </div>
+                  <div class="modal-footer">
+                    <a href="#!" class="modal-close btn grey lighten-4 black-text">Close</a>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <a class="btn grey lighten-4 black-text modal-trigger" href="#modal-tags-{{message.id}}"><i class="large material-icons">comment</i></a>
+                <div id="modal-tags-{{message.id}}" class="modal">
+                  <div class="modal-content black-text">
+                    <h4>{{message.subject}} - Edit Tags</h4>
+                    <hr>
+                    <textarea id="edit-tags-{{message.id}}"></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="#!" class="modal-close btn grey lighten-4 black-text">Close</a>
+                    <a href="#!" class="modal-close btn grey lighten-4 black-text" data-id="{{message.id}}" id="mail-tags-post">Save and Close</a>
+                  </div>
+                </div>
+                <a class="btn grey lighten-4 black-text modal-trigger" href="#modal-assigned_to-{{message.id}}"><i class="large material-icons">perm_identity</i></a>
+                <div id="modal-assigned_to-{{message.id}}" class="modal">
+                  <div class="modal-content black-text">
+                    <h4>{{message.subject}} - Assign User</h4>
+                    <hr>
+                    <select id="edit-assigned_to-{{message.id}}">
+                      <option></option>
+                      <option>distortednet</option>
+                      <option>MellowNebula</option>
+                      <option>BoomLiam</option>
+                      <option>conceptional</option>
+                      <option>laagone</option>
+                      <option>Heep123</option>
+                      <option>Decicus</option>
+                      <option>sargasm_gaming</option>
+                      <option>Zcotticus</option>
+                    </select>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="#!" class="modal-close btn grey lighten-4 black-text">Close</a>
+                    <a href="#!" class="modal-close btn grey lighten-4 black-text" data-id="{{message.id}}" id="mail-assigned_to-post">Save and Close</a>
+                  </div>
+                </div>
+                {%if message.open == false%}
+                <a class="btn grey lighten-4 black-text" href="#" data-id="{{message.id}}" data-update="open" id="mail-status-post"><i class="large material-icons">not_interested</i></a>
+                {%else%}
+                <a class="btn grey lighten-4 black-text" href="#" data-id="{{message.id}}" data-update="close" id="mail-status-post"><i class="large material-icons">done</i></a>
+                {%endif%}
+              </td>
+            </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+  </div>
+  <script src="../../js/mail.js"></script>
+{% include "./footer.html"%}
