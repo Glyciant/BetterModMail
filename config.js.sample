@@ -1,0 +1,21 @@
+var config = {}
+
+config.app = {}
+config.rethink = {}
+config.auth = {}
+
+config.app.port = 7000
+config.app.baseurl = "http://localhost:" + config.app.port
+
+config.rethink.host = "127.0.0.1";
+config.rethink.port = "28015";
+config.rethink.db = "BetterModMail";
+
+config.auth.cid = "";
+config.auth.secret = "";
+config.auth.redirect = config.app.baseurl + "/auth/login/";
+config.auth.authurl = 'https://www.reddit.com/api/v1/authorize?client_id=' + config.auth.cid + '&response_type=code&state=BETTERMODMAILAUTHSYSTEMSTATE&redirect_uri=' + config.auth.redirect + '&duration=permanent&scope=identity,privatemessages';
+
+config.app.mods = ["distortednet","MellowNebula","BoomLiam","conceptional","laagone","Heep123","Decicus","sargasm_gaming","Zcotticus"]
+
+module.exports = config
