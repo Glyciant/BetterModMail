@@ -79,7 +79,7 @@ app.get('*', function(req, res, next) {
 	}
 });
 
-app.get('/mail/', function(req, res) {
+app.get('/mail/:user/:status', function(req, res) {
 	restler.get('https://oauth.reddit.com/message/moderator', {
 		'headers': {
 			'User-Agent': 'BetterModMail',
@@ -128,31 +128,16 @@ app.get('/mail/', function(req, res) {
 			      open: db[0][elementPos].open,
 						replies: replies
 					}
-			  	mail.push(dataobject);
+					if ((req.params.status == "all") || (req.params.status == "open" && dataobject.open == true) || (req.params.status == "closed" && dataobject.open == false)) {
+						if ((req.params.user == "all") || (req.params.user == "me" || dataobject.assigned_to == app.locals.loggedin)) {
+							mail.push(dataobject);
+						}
+					}
 				}
 		  }
-		  res.render('mail', {mail: mail, showStatus: "all", showUser: "all"})
+		  res.render('mail', {mail: mail})
 		})
 	});
-});
-
-app.get('/mail/open/', function(req, res) {
-});
-
-app.get('/mail/closed', function(req, res) {
-});
-
-app.get('/mail/:user', function(req, res) {
-});
-
-app.get('/mail/:user/open', function(req, res) {
-});
-
-app.get('/mail/:user/closed', function(req, res) {
-});
-
-app.get('/settings', function(req, res) {
-  res.render('settings');
 });
 
 // Posts

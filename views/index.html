@@ -1,2 +1,16 @@
 {% include "./header.html"%}
+  <center class="white-text">
+    <div class="row">
+      <div class="col s12">
+        <h3>Hey There!</h3>
+      </div>
+      <div class="col s12">
+        {%if !loggedin%}
+        <p>Please log in via reddit API to use this site.</p>
+        {%else%}
+        <p>Don't forget the check out channel intros over at <a href="http://www.twitchdb.tv">TwitchDB</a>!</p>
+        {%endif%}
+      </div>
+    </div>
+  </center>
 {% include "./footer.html"%}

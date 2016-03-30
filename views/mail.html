@@ -14,26 +14,6 @@
         <p class="white-text"><a class="btn grey lighten-4 black-text" href="#"><i class="large material-icons">not_interested</i></a> - Open Case</p>
       </div>
     </div>
-    <div class="row">
-      <div class="col s1 white-text">
-        <p>Search: </p>
-      </div>
-      <div class="col s8">
-        <input type="text"/>
-      </div>
-      <div class="col s2">
-        <select>
-          <option></option>
-          <option>Author</option>
-          <option>Subject</option>
-          <option>Body</option>
-          <option>Tags</option>
-        </select>
-      </div>
-      <div class="col s1">
-         <a class="btn grey lighten-4 black-text"><i class="large material-icons">search</i></a>
-      </div>
-    </div>
     <table class="white-text responsive-table">
       <thead>
         <th>Author</th>
@@ -50,9 +30,9 @@
             <tr id="row-{{message.id}}">
               <td>{{message.author}}</td>
               <td>{{message.subject}}</td>
-              <td>{{message.tags}}</td>
-              <td>{{message.assigned_to}}</td>
-              <td>
+              <td id="message-tags-{{message.id}}">{{message.tags}}</td>
+              <td id="message-assigned_to-{{message.id}}">{{message.assigned_to}}</td>
+              <td id="message-status-{{message.id}}">
                 {%if message.open == false%}
                 Closed
                 {%else%}
@@ -65,7 +45,7 @@
                   <div class="modal-content black-text">
                     <h4>{{message.subject}} - Body</h4>
                     <hr>
-                    <p>{%markdown%}{{message.body}}{%endmarkdown%}</p>
+                    <p>{%markdown%}{{message.body|safe}}{%endmarkdown%}</p>
                   </div>
                   <div class="modal-footer">
                     <a href="#!" class="modal-close btn grey lighten-4 black-text">Close</a>
@@ -80,7 +60,7 @@
                     <hr>
                     {%for reply in message.replies%}
                       <h5>{{reply.data.author}} {%if reply.data.distinguished == "moderator"%}<img src="../../img/mod.png" />{%endif%}</h5>
-                      <p>{%markdown%}{{reply.data.body}}{%endmarkdown%}</p>
+                      <p>{%markdown%}{{reply.data.body|safe}}{%endmarkdown%}</p>
                       <hr>
                     {%endfor%}
                     {%if !message.replies[0]%}
@@ -129,9 +109,9 @@
                   </div>
                 </div>
                 {%if message.open == false%}
-                <a class="btn grey lighten-4 black-text" href="#" data-id="{{message.id}}" data-update="open" id="mail-status-post"><i class="large material-icons">not_interested</i></a>
+                <a class="btn grey lighten-4 black-text" href="#" data-id="{{message.id}}" data-update="open" id="mail-status-post"><i  id="message-change-status-{{message.id}}" class="large material-icons">not_interested</i></a>
                 {%else%}
-                <a class="btn grey lighten-4 black-text" href="#" data-id="{{message.id}}" data-update="close" id="mail-status-post"><i class="large material-icons">done</i></a>
+                <a class="btn grey lighten-4 black-text" href="#" data-id="{{message.id}}" data-update="close" id="mail-status-post"><i  id="message-change-status-{{message.id}}" class="large material-icons">done</i></a>
                 {%endif%}
               </td>
             </tr>
