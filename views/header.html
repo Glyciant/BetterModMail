@@ -22,6 +22,9 @@
         <li><a class="white-text" href="/mail/{{loggedin}}/closed/">Closed</a></li>
         <li><a class="white-text" href="/mail/{{loggedin}}/all">All</a></li>
       </ul>
+      <ul id="dropdown-logout" class="dropdown-content grey">
+        <li><a class="white-text" href="/auth/logout/">Logout</a></li>
+      </ul>
       {%endif%}
       <nav class="grey darken-4">
         <div class="nav-wrapper">
@@ -39,7 +42,7 @@
             {%if !loggedin%}
             <li><a href="{{authurl}}">Login</a></li>
             {%else%}
-            <li><a href="/auth/logout/">{{loggedin}}</a></li>
+            <li><a class="dropdown-button" href="#!" data-activates="dropdown-logout">{{loggedin}}</a></li>
             {%endif%}
           </ul>
         </div>
