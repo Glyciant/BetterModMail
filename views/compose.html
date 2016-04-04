@@ -1,0 +1,26 @@
+{% include "./header.html"%}
+  <div class="row white-text">
+    <div class="row">
+      <div class="input-field col s6">
+        <input id="recipient" type="text" class="validate">
+        <label for="title">Recipient</label>
+      </div>
+      <div class="input-field col s6">
+        <input id="subject" type="text" class="validate">
+        <label for="link">Subject</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s12">
+        <textarea id="body" type="text" class="validate materialize-textarea"></textarea>
+        <label for="body">Body</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s4 offset-s4">
+        <a id="submit-content" class="btn grey darken-1">Send Message</a>
+      </div>
+    </div>
+  </div>
+  <script src="/js/submit.js"></script>
+{% include "./footer.html"%}

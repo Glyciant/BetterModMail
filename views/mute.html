@@ -1,0 +1,34 @@
+{% include "./header.html"%}
+  <div class="row white-text">
+    <div class="input-field col s3">
+      <input id="user" type="text" class="validate">
+      <label for="user">User</label>
+    </div>
+    <div class="input-field col s6">
+      <input id="reason" type="text" class="validate">
+      <label for="reason">Reason</label>
+    </div>
+    <div class="input-field col s3">
+      <a id="mute-user" class="btn grey darken-1" data-mod="{{loggedin}}">Mute User</a>
+    </div>
+  </div>
+  <table class="white-text responsive-table">
+    <thead>
+      <th>Date</th>
+      <th>User</th>
+      <th>Muted By</th>
+      <th>Reason</th>
+      <th>Un-Mute</th>
+    </thead>
+    <tbody>
+      {%for muted in data%}
+        <td>{{muted.date}}</td>
+        <td>{{muted.id}}</td>
+        <td>{{muted.mod}}</td>
+        <td>{{muted.reason}}</td>
+        <td><a href="javascript:;" class="btn grey lighten-4 black-text" data-user="{{muted.id}}" id="unmute"><i class="large material-icons">done</i></a></td>
+      {%endfor%}
+    </tbody>
+  </table>
+  <script src="/js/mute.js"></script>
+{% include "./footer.html"%}

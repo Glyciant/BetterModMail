@@ -5,6 +5,7 @@ var	config = require('./config'),
 	type = thinky.type,
 	Query = thinky.Query,
   MailModel = thinky.createModel('mail', schema.mail, schema.primarykey.mail);
+  MuteModel = thinky.createModel('mute', schema.mute, schema.primarykey.mute);
 
 var mail = {
   getTags: (ids) => {
@@ -58,6 +59,31 @@ var mail = {
   }
 }
 
+var mute = {
+  add: (object) => {
+    return new Promise((resolve, reject) => {
+      MuteModel.insert(object).run().then((db) => {
+        resolve(db)
+      });
+    })
+  },
+  remove: (id) => {
+    return new Promise((resolve, reject) => {
+      MuteModel.filter({id: id}).delete().run().then((db) => {
+        resolve(db)
+      });
+    })
+  },
+  get: () => {
+    return new Promise((resolve, reject) => {
+      MuteModel.then((db) => {
+        resolve(db)
+      });
+    })
+  }
+}
+
 module.exports = {
-  mail: mail
+  mail: mail,
+  mute: mute
 }

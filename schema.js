@@ -8,6 +8,7 @@ var schema = {};
 
 schema.primarykey = {
   mail: "id",
+  mute: "id"
 };
 
 schema.mail = {
@@ -20,5 +21,12 @@ schema.mail = {
   open: type.boolean(),
   date: type.number(),
 };
+
+schema.mute = {
+  id: type.string(),
+  mod: type.string(),
+  date: type.string(),
+  reason: type.string()
+}
 
 module.exports = schema

@@ -35,7 +35,7 @@ app.get('*', function(req, res, next) {
 });
 
 app.get('/', function(req, res) {
-  res.render('index');
+  res.render('index', {isMod: helpers.isMod(req.session.name)});
 });
 
 app.get('/auth/login/', function(req, res) {
@@ -89,8 +89,8 @@ app.get('/mail/:user/:status', function(req, res) {
 		var idtags = [];
 				postArray = [];
 				repliesArray = [];
-		for(var i in data.data.children) {
-			if (data.data.children[i].data.dest == "#Twitch") {
+		for (var i in data.data.children) {
+			if (data.data.children[i].data.subreddit == "Twitch") {
 			  idtags.push(data.data.children[i].data.name);
 				var postObject = {
 					id: data.data.children[i].data.name,
@@ -106,10 +106,15 @@ app.get('/mail/:user/:status', function(req, res) {
 			}
 		}
 		db.mail.create(postArray)
-		Promise.all([db.mail.getTags(idtags), db.mail.getAssignedTo(idtags), db.mail.getStatus(idtags)]).then(function(db) {
+		Promise.all([db.mail.getTags(idtags), db.mute.get()]).then(function(db) {
 		  var mail = [];
-		  for(var i in data.data.children) {
-				if (data.data.children[i].data.dest == "#Twitch") {
+					mute = [];
+
+			for (var i in db[1]) {
+				mute.push(db[1][i].id)
+			}
+		  for (var i in data.data.children) {
+				if (data.data.children[i].data.subreddit == "Twitch") {
 					var elementPos = db[0].map(function(x) { return x.id; }).indexOf(data.data.children[i].data.name);
 					if (repliesArray.indexOf(data.data.children[i].data.name) > -1) {
 						var replies = data.data.children[i].data.replies.data.children
@@ -122,7 +127,8 @@ app.get('/mail/:user/:status', function(req, res) {
 						subject: data.data.children[i].data.subject,
 						body: data.data.children[i].data.body,
 						author: data.data.children[i].data.author,
-						date: data.data.children[i].data.created_utc,
+						date: helpers.toDate(data.data.children[i].data.created_utc),
+						url: "https://reddit.com/message/messages/" + data.data.children[i].data.name.replace("t4_", ""),
 			      tags: db[0][elementPos].tags,
 			      assigned_to: db[0][elementPos].assigned_to,
 			      open: db[0][elementPos].open,
@@ -130,15 +136,27 @@ app.get('/mail/:user/:status', function(req, res) {
 					}
 					if ((req.params.status == "all") || (req.params.status == "open" && dataobject.open == true) || (req.params.status == "closed" && dataobject.open == false)) {
 						if ((req.params.user == "all") || (req.params.user == "me" || dataobject.assigned_to == app.locals.loggedin)) {
-							mail.push(dataobject);
+							if (mute.indexOf(dataobject.author) <= -1) {
+								mail.push(dataobject);
+							}
 						}
 					}
 				}
 		  }
-		  res.render('mail', {mail: mail})
+		  res.render('mail', {mail: mail, muted: mute})
 		})
 	});
 });
+
+app.get('/compose/', function(req, res) {
+	res.render('compose')
+})
+
+app.get('/mute/', function(req, res) {
+	db.mute.get().then(function(result) {
+		res.render('mute', {data: result})
+	})
+})
 
 // Posts
 app.post('/data/tags', function(req,res) {
@@ -152,6 +170,42 @@ app.post('/data/assigned_to', function(req,res) {
 app.post('/data/open', function(req,res) {
 	req.body.open = (req.body.open == "true")
 	db.mail.updateStatus(req.body)
+})
+
+app.post('/data/reply/', function(req,res) {
+	restler.post('https://oauth.reddit.com/api/comment', {
+		'headers': {
+			'User-Agent': 'BetterModMail',
+			'Authorization': 'bearer ' + req.session.auth
+		},
+		data: {
+			thing_id: req.body.id,
+			text: req.body.content
+		}
+	})
+})
+
+app.post('/data/compose/', function(req,res) {
+	restler.post('https://oauth.reddit.com/api/compose', {
+		'headers': {
+			'User-Agent': 'BetterModMail',
+			'Authorization': 'bearer ' + req.session.auth
+		},
+		data: {
+			'from_sr': "Twitch",
+			to: req.body.to,
+			subject: req.body.subject,
+			text: req.body.body
+		}
+	})
+})
+
+app.post('/data/mute', function(req,res) {
+	db.mute.add(req.body)
+})
+
+app.post('/data/unmute', function(req,res) {
+	db.mute.remove(req.body.id)
 })
 
 // GET 404

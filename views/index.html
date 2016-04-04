@@ -1,16 +1,64 @@
 {% include "./header.html"%}
-  <center class="white-text">
-    <div class="row">
-      <div class="col s12">
-        <h3>Hey There!</h3>
-      </div>
-      <div class="col s12">
-        {%if !loggedin%}
-        <p>Please log in via reddit API to use this site.</p>
-        {%else%}
-        <p>Don't forget the check out channel intros over at <a href="http://www.twitchdb.tv">TwitchDB</a>!</p>
-        {%endif%}
-      </div>
+  <div class="row white-text">
+    <div class="col s12 center">
+      <h2>Hey There!</h2>
     </div>
-  </center>
+    <div class="col s12">
+      {%if !loggedin%}
+      <p class="center">Please log in via reddit API to use this site.</p>
+      {%else%}
+        {%if isMod == false%}
+          <p class="center">Don't forget the check out channel intros over at <a href="http://www.twitchdb.tv">TwitchDB</a>!</p>
+        {%else%}
+          <h4>Welcome to BetterModMail</h4>
+          <p>This page will hopefully help to explain how to use this site effectively.</p>
+          <hr />
+          <h5>Viewing Messages</h5>
+          <p>To view messages from the subreddit, select the <code>All Mail</code> or <code>My Mail</code> dropdown box, and choose a filter. If you are new to the site, you will want to use <code>All</code> in <code>All Mail</code></p>
+          <p>Selecting <code>My Mail</code> filters the messages to only show the ones assigned to you. The sub-filters sort the messages by their status in addition to this.</p>
+          <h5>Applying Tags to Messages</h5>
+          <p>Tags can be used for multiple purposes, mostly for TL;DRs and CTRL + F keywords. To add tags to a message, use the following method:</p>
+          <ol>
+            <li>Go to the messages table.</li>
+            <li>Find the action column of the message you want to add tags to.</li>
+            <li>Click the first button. A key of the buttons is at the top of the page.</li>
+            <li>In the popup that appears, enter the tags you wish to add or edit.</li>
+            <li>Click <code>Save and Close</code></li>
+          </ol>
+          <h5>Assigning User to a Message</h5>
+          <p>Assigning a user allows message to be filtered easier. You can assign a user by doing the following:</p>
+          <ol>
+            <li>Go to the messages table.</li>
+            <li>Find the action column of the message you want to add tags to.</li>
+            <li>Click the second button. A key of the buttons is at the top of the page.</li>
+            <li>In the popup that appears, select the moderator you wish to assign.</li>
+            <li>Click <code>Save and Close</code></li>
+          </ol>
+          <h5>Changing a Message's Status</h5>
+          <p>Changing a messages status allows message's to be filtered and managed easier. You can do this with the following method:</p>
+          <ol>
+            <li>Go to the messages table.</li>
+            <li>Find the action column of the message you want to add tags to.</li>
+            <li>Click the third button. A key of the buttons is at the top of the page.</li>
+          </ol>
+          <h5>Replying to a Message</h5>
+          <p>BetterModMail has a built-in system for replying to messages. You can use it with the following method:</p>
+          <ol>
+            <li>Go to the messages table.</li>
+            <li>Find the action column of the message you want to add tags to.</li>
+            <li>Click the fifth button. A key of the buttons is at the top of the page.</li>
+            <li>In the popup that appears, type the message you wish to send. You can find a drop-down box above the textbox with some pre-made responses.</li>
+            <li>Click <code>Send and Close</code></li>
+          </ol>
+          <h5>Creating to a Message</h5>
+          <p>Creating a message allows you to start a modmail conversation, that will then appear on the table. To do this, you need to:</p>
+          <ol>
+            <li>Click <code>Compose</code> on the navigation bar.</li>
+            <li>Fill in all the fields.</li>
+            <li>Click the <code>Send Message</code> button.</li>
+          </ol>
+        {%endif%}
+      {%endif%}
+    </div>
+  </div>
 {% include "./footer.html"%}

@@ -30,10 +30,12 @@
             {%if loggedin%}
             <li><a class="dropdown-button" href="#!" data-activates="dropdown-content-1">All Mail</a></li>
             <li><a class="dropdown-button" href="#!" data-activates="dropdown-content-2">My Mail</a></li>
+            <li><a href="/compose/">Compose Message</a></li>
+            <li><a href="/mute/">Muted Users</a></li>
             {%endif%}
-            <li><a href="https://github.com/Heep123/BetterModMail">GitHub</a></li>
           </ul>
           <ul class="right">
+            <li><a href="https://github.com/Heep123/BetterModMail">GitHub</a></li>
             {%if !loggedin%}
             <li><a href="{{authurl}}">Login</a></li>
             {%else%}
