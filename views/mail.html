@@ -53,7 +53,7 @@
                   <div class="modal-content black-text">
                     <h4>{{message.subject}} - Body</h4>
                     <hr>
-                    <p>{%markdown%}{{message.body|safe}}{%endmarkdown%}</p>
+                    <p>{%markdown%}{{message.body}}{%endmarkdown%}</p>
                   </div>
                   <div class="modal-footer">
                     <a href="#!" class="modal-close btn grey lighten-4 black-text">Close</a>
@@ -68,7 +68,7 @@
                     <hr>
                     {%for reply in message.replies%}
                       <h5>{{reply.data.author}} {%if reply.data.distinguished == "moderator"%}<img src="/img/mod.png" />{%endif%}</h5>
-                      <p>{%markdown%}{{reply.data.body|safe}}{%endmarkdown%}</p>
+                      <p>{%markdown%}{{reply.data.body}}{%endmarkdown%}</p>
                       <hr>
                     {%endfor%}
                     {%if !message.replies[0]%}
