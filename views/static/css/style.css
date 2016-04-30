@@ -10,14 +10,6 @@ select {
 	margin-top:64px
 }
 
-.input-field :focus {
-  border-color: white !important;
-}
-
-.input-field .active {
-  color: white !important;
-}
-
 #submit-content, #mute-user {
   width: 100%;
 }
@@ -26,4 +18,18 @@ select {
   border: solid black 1px;
   margin-top: 5px;
   min-height: 350px;
+}
+
+input[type=text]:focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]) {
+  border-bottom: 1px solid #4a148c;
+  box-shadow: 0 1px 0 0 #4a148c;
+}
+
+textarea.materialize-textarea:focus:not([readonly])+label, input[type=text]:focus:not([readonly])+label {
+  color: #4a148c;
+}
+
+[type="radio"]:checked+label:after {
+  border: 2px solid #4a148c;
+  background-color: #4a148c;
 }

@@ -1,26 +1,165 @@
 {% include "./header.html"%}
   <div class="row">
-    <div class="row">
-      <div class="col s2">
-        <p class="white-text"><a class="btn grey lighten-4 black-text" href="#"><i class="large material-icons">comment</i></a> - Edit Tags</p>
+    <div id="search" class="purple lighten-2 col s10 offset-s1" style="margin-bottom: 15px; padding: 5px; border-radius: 15px;">
+      <div class="col s2 offset-s1" style="margin-top: 7px;">
+        <input placeholder="Search Subject" id="search-subject" type="text" class="validate">
+      </div>
+      <div class="col s2" style="margin-top: 7px;">
+        <input placeholder="Search Author" id="search-author" type="text" class="validate">
+      </div>
+      <div class="col s2" style="margin-top: 7px;">
+        <input placeholder="Search Tags" id="search-tags" type="text" class="validate">
+      </div>
+      <div class="col s2" style="margin-top: 7px;">
+        <input placeholder="Search Assigned To" id="search-assigned_to" type="text" class="validate">
       </div>
       <div class="col s2">
-        <p class="white-text"><a class="btn grey lighten-4 black-text" href="#"><i class="large material-icons">perm_identity</i></a> - Assign User</p>
-      </div>
-      <div class="col s2">
-        <p class="white-text"><a class="btn grey lighten-4 black-text" href="#"><i class="large material-icons">done</i></a> - Close Case</p>
-      </div>
-      <div class="col s2">
-        <p class="white-text"><a class="btn grey lighten-4 black-text" href="#"><i class="large material-icons">not_interested</i></a> - Open Case</p>
-      </div>
-      <div class="col s2">
-        <p class="white-text"><a class="btn grey lighten-4 black-text" href="#"><i class="large material-icons">input</i></a> - Reddit Link</p>
-      </div>
-      <div class="col s2">
-        <p class="white-text"><a class="btn grey lighten-4 black-text" href="#"><i class="large material-icons">replay</i></a> - Reply</p>
+        <span>
+          <input name="search-status" type="radio" id="search-status-all">
+          <label class="black-text" for="search-status-all">All</label>
+        </span><br>
+        <span>
+          <input name="search-status" type="radio" id="search-status-open">
+          <label class="black-text" for="search-status-open">Open</label>
+        </span><br>
+        <span>
+          <input name="search-status" type="radio" id="search-status-closed">
+          <label class="black-text" for="search-status-closed">Closed</label>
+        </span>
       </div>
     </div>
-    <table class="white-text responsive-table">
+    <div id="mail-wrapper" style="margin-top: 15px;">
+      {%for message in mail%}
+        <div class="col s10 offset-s1 purple lighten-3" style="margin-bottom: 15px; padding: 5px; border-radius: 15px;" id="message-{{message.id|lower}}" data-user="{{message.author|lower}}" data-subject="{{message.subject|lower}}" data-tags="{{message.tags|lower}}" data-assigned="{{message.assigned_to|lower}}" data-status="{{message.open}}">
+          <div class="row">
+            <div class="col s12">
+              <h5>{{message.subject}}</h5>
+              <p>{%markdown%}{{message.body}}{%endmarkdown%}</p>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col s2 center" style="border-right: dotted 1px white">
+              <strong>Author</strong><br>
+              <span>{{message.author}}</span><br>
+              <a class="purple-text" href="#">(Mute)</a>
+            </div>
+            <div class="col s2 center" style="border-right: dotted 1px white">
+              <strong>Assigned To</strong><br>
+              <span id="message-assigned_to-{{message.id}}">{{message.assigned_to}}</span><br>
+              <a class="purple-text modal-trigger" href="#modal-assigned_to-{{message.id}}">(Change)</a>
+            </div>
+            <div class="col s2 center" style="border-right: dotted 1px white">
+              <strong>Replies</strong><br>
+              <span>{{message.replies.length}}</span><br>
+              <a class="purple-text modal-trigger" href="#modal-replies-{{message.id}}">(View)</a>
+            </div>
+            <div class="col s2 center" style="border-right: dotted 1px white">
+              <strong>Reply</strong><br>
+              <a class="purple-text modal-trigger" href="#modal-reply-{{message.id}}">Click Here</a><br>
+              <a class="purple-text" href="{{message.url}}">(Reddit Thread)</a>
+            </div>
+            <div class="col s2 center" style="border-right: dotted 1px white">
+              <strong>Tags</strong><br>
+              <span id="message-tags-{{message.id}}">{{message.tags}}</span><br>
+              <a class="purple-text modal-trigger" href="#modal-tags-{{message.id}}">(Edit)</a>
+            </div>
+            <div class="col s2 center">
+              <strong>Status</strong><br>
+              <span id="message-status-{{message.id}}">{%if message.open%}Open{%else%}Closed{%endif%}</span><br>
+              <a class="purple-text" id="mail-status-post" href="javascript:;" data-id="{{message.id}}" data-update="{{message.open}}">(Change)</a>
+            </div>
+          </div>
+          <div id="modal-tags-{{message.id}}" class="modal">
+            <div class="modal-content black-text">
+              <h4>{{message.subject}} - Edit Tags</h4>
+              <hr>
+              <textarea id="edit-tags-{{message.id}}">{%if message.tags !== "[None]"%}{{message.tags}}{%endif%}</textarea>
+            </div>
+            <div class="modal-footer">
+              <a href="#!" class="modal-close btn grey lighten-4 black-text">Close</a>
+              <a href="#!" class="modal-close btn grey lighten-4 black-text" data-id="{{message.id}}" id="mail-tags-post">Save and Close</a>
+            </div>
+          </div>
+          <div id="modal-assigned_to-{{message.id}}" class="modal">
+            <div class="modal-content black-text">
+              <h4>{{message.subject}} - Assign User</h4>
+              <hr>
+              <select id="edit-assigned_to-{{message.id}}">
+                <option></option>
+                <option>Heep123</option>
+                <option>distortednet</option>
+                <option>BoomLiam</option>
+                <option>MellowNebula</option>
+                <option>conceptional</option>
+                <option>laagone</option>
+                <option>Zcotticus</option>
+                <option>Decicus</option>
+                <option>sargasm_gaming</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <a href="#!" class="modal-close btn grey lighten-4 black-text">Close</a>
+              <a href="#!" class="modal-close btn grey lighten-4 black-text" data-id="{{message.id}}" id="mail-assigned_to-post">Save and Close</a>
+            </div>
+          </div>
+          <div id="modal-replies-{{message.id}}" class="modal">
+            <div class="modal-content black-text">
+              <h4>{{message.subject}} - Replies [{{message.replies.length}}]</h4>
+              <hr>
+              {%for reply in message.replies%}
+                <h5>{{reply.data.author}} {%if reply.data.distinguished == "moderator"%}<img src="/img/mod.png" />{%endif%}</h5>
+                <p>{%markdown%}{{reply.data.body}}{%endmarkdown%}</p>
+                <hr>
+              {%endfor%}
+              {%if !message.replies[0]%}
+                <p>No results found.</p>
+              {%endif%}
+            </div>
+            <div class="modal-footer">
+              <a href="#!" class="modal-close btn grey lighten-4 black-text">Close</a>
+            </div>
+          </div>
+          <div id="modal-reply-{{message.id}}" class="modal">
+            <div class="modal-content black-text">
+              <h4>{{message.subject}} - Send Reply</h4>
+              <hr>
+              <select id="select-auto-response" data-id="{{message.id}}">
+                <option></option>
+                <option>Channel Advertisement</option>
+                <option>Personal Help Response</option>
+                <option>Ad Request Form</option>
+                <option>Ad Request Approved</option>
+                <option>Ad Request Rejected</option>
+                <option>Karma Filter Query Approve</option>
+                <option>Karma Filter Query Rejection</option>
+                <option>Shadowbanned</option>
+                <option>Global Moderator Application</option>
+                <option>Reporting Users</option>
+                <option>Flair Fixed</option>
+              </select>
+              <textarea id="create-reply-{{message.id}}"></textarea>
+            </div>
+            <div class="modal-footer">
+              <a href="#!" class="modal-close btn grey lighten-4 black-text">Close</a>
+              <a href="#!" class="modal-close btn grey lighten-4 black-text" data-id="{{message.id}}" id="mail-reply-post">Send and Close</a>
+            </div>
+          </div>
+          <hr>
+        </div>
+      {%endfor%}
+    </div>
+    <div id="pages" class="purple lighten-2 col s10 offset-s1" style="margin-bottom: 15px; padding: 5px; border-radius: 15px;">
+      <center>
+        {%if pages.before%}
+          <a class="btn purple darken-4" href="/mail/?before={{pages.before}}"><i class="large material-icons">skip_previous</i></a>
+        {%endif%}
+        {%if pages.after%}
+          <a class="btn purple darken-4" href="/mail/?after={{pages.after}}"><i class="large material-icons">skip_next</i></a>
+        {%endif%}
+      </center>
+    </div>
+    <!-- <table class="white-text responsive-table">
       <thead>
         <th>Date</th>
         <th>Author</th>
@@ -152,7 +291,7 @@
             </tr>
         {%endfor%}
       </tbody>
-    </table>
+    </table> -->
   </div>
   <script src="/js/mail.js"></script>
 {% include "./footer.html"%}

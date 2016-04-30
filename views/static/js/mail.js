@@ -30,15 +30,15 @@ $(document).ready(function(){
    var id = $(this).data("id")
        status = $(this).data("update")
 
-   if (status == "open") {
+   if (status == "false") {
      var open = true
+     $(this).data("update", "true")
      $("#message-status-" + id).html("Open")
-     $("#message-change-status-" + id).html("done")
    }
-   else if (status == "close") {
+   else if (status == "true") {
      var open = false
+     $(this).data("update", "false")
      $("#message-status-" + id).html("Closed")
-     $("#message-change-status-" + id).html("not_interested")
    }
 
    $.post('/data/open', {
@@ -58,6 +58,44 @@ $(document).ready(function(){
     })
  })
 
+ $(document).delegate("#search-author", "change", function() {
+   var query = $(this).val().toLowerCase()
+   $("#mail-wrapper div[id*='message']").show()
+   if (query !== "") {
+     $("#mail-wrapper div:not([data-user*='"+ query +"'])[id*='message']").hide()
+   }
+ })
+
+ $(document).delegate("#search-subject", "change", function() {
+   var query = $(this).val().toLowerCase()
+   $("#mail-wrapper div[id*='message']").show()
+   if (query !== "") {
+     $("#mail-wrapper div:not([data-subject*='"+ query +"'])[id*='message']").hide()
+   }
+ })
+
+ $(document).delegate("#search-tags", "change", function() {
+   var query = $(this).val().toLowerCase()
+   $("#mail-wrapper div[id*='message']").show()
+   if (query !== "") {
+     $("#mail-wrapper div:not([data-tags*='"+ query +"'])[id*='message']").hide()
+   }
+ })
+
+ $(document).delegate("#search-status-all", "change", function() {
+   $("#mail-wrapper div[id*='message']").show()
+ })
+
+ $(document).delegate("#search-status-open", "change", function() {
+   $("#mail-wrapper div[id*='message']").show()
+   $("#mail-wrapper div:not([data-status*='true'])[id*='message']").hide()
+ })
+
+ $(document).delegate("#search-status-closed", "change", function() {
+   $("#mail-wrapper div[id*='message']").show()
+   $("#mail-wrapper div:not([data-status*='false'])[id*='message']").hide()
+ })
+
  $(document).delegate("#select-auto-response", "change", function() {
    var value = $(this).val(),
    id = $(this).data("id")
@@ -72,7 +110,7 @@ $(document).ready(function(){
      $("#create-reply-" + id).val("Hey there,\n \nYou have sent us a modmail message, however we are unable to help individual users with non-subreddit related problems. Instead, I suggest clicking the '[Submit New Topic](https://www.reddit.com/r/Twitch/submit?selftext=true)' button, on the subreddit sidebar - and let the community help you. Please make sure to read the rules, and check your post follows them. It would also help if you can provide as much information as possbile.\n \nThanks!")
    }
    else if (value === "Ad Request Form") {
-     $("#create-reply-" + id).val("Hey there,\n \nPlease could you fill out [this form](http://requests.twitchdb.tv/submit)? It helps us to find out more information about your advertisement request and helps to improve our judgement on approving it. Ensure any links are included and you provide as much information as possible. Remember that posting your request before it is approved is against subreddit rule #3. Please note these approvals sometimes take a while, but feel free to ask again after 7 days.\n \nIf you have any other issues, please let us know.\n \nThanks!")
+     $("#create-reply-" + id).val("Hey there,\n \nPlease could you fill out [this form](http://requests.twithdb.tv/submit)? It helps us to find out more information about your advertisement request and helps to improve our judgement on approving it. Ensure any links are included and you provide as much information as possible. Remember that posting your request before it is approved is against subreddit rule #3. Please note these approvals sometimes take a while, but feel free to ask again after 7 days.\n \nIf you have any other issues, please let us know.\n \nThanks!")
    }
    else if (value === "Ad Request Approved") {
      $("#create-reply-" + id).val("Hey there,\n \nWe have now had time to review the advertisement request you submitted, and have decided to allow your post.\n \nThanks for your patience!"     )

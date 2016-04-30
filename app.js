@@ -12,6 +12,7 @@ var express = require('express'),
 	restler = require('restler');
 
 swigExtras.useTag(swig, 'markdown');
+swigExtras.useFilter(swig, 'truncate');
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
@@ -31,11 +32,8 @@ app.locals = {
 /* GETS */
 app.get('*', function(req, res, next) {
 	app.locals.loggedin = req.session.name;
+	app.locals.isMod =  helpers.isMod(req.session.name);
 	next();
-});
-
-app.get('/', function(req, res) {
-  res.render('index', {isMod: helpers.isMod(req.session.name)});
 });
 
 app.get('/auth/login/', function(req, res) {
@@ -65,22 +63,31 @@ app.get('/auth/logout', function(req, res) {
 		res.redirect('/');
 	});
 });
+
 app.get('*', function(req, res, next) {
 	if (!app.locals.loggedin) {
-		res.render('error', {title: "Unauthorized", body: "You must login to access this page."})
+		res.redirect(app.locals.authurl)
 	}
 	else {
-		if (helpers.isMod(app.locals.loggedin) == true) {
-			next();
-		}
-		else {
-			res.render('error', {title: "Unauthorized", body: "You do not have permission to access this page."})
-		}
+		next();
 	}
 });
 
-app.get('/mail/:user/:status', function(req, res) {
-	restler.get('https://oauth.reddit.com/message/moderator', {
+app.get('/', function(req, res) {
+  res.render('index');
+});
+
+app.get('*', function(req, res, next) {
+	if (helpers.isMod(app.locals.loggedin) == true) {
+		next();
+	}
+	else {
+		res.redirect("/")
+	}
+});
+
+app.get('/mail/', function(req, res) {
+	restler.get('https://oauth.reddit.com/message/moderator?after=' + req.query.after + '&before=' + req.query.before, {
 		'headers': {
 			'User-Agent': 'BetterModMail',
 			'Authorization': 'bearer ' + req.session.auth
@@ -106,6 +113,10 @@ app.get('/mail/:user/:status', function(req, res) {
 			}
 		}
 		db.mail.create(postArray)
+		var pages = {
+			before: data.data.before,
+			after: data.data.after
+		}
 		Promise.all([db.mail.getTags(idtags), db.mute.get()]).then(function(db) {
 		  var mail = [];
 					mute = [];
@@ -134,16 +145,12 @@ app.get('/mail/:user/:status', function(req, res) {
 			      open: db[0][elementPos].open,
 						replies: replies
 					}
-					if ((req.params.status == "all") || (req.params.status == "open" && dataobject.open == true) || (req.params.status == "closed" && dataobject.open == false)) {
-						if ((req.params.user == "all") || (req.params.user == "me" || dataobject.assigned_to == app.locals.loggedin)) {
-							if (mute.indexOf(dataobject.author) <= -1) {
-								mail.push(dataobject);
-							}
-						}
+					if (mute.indexOf(dataobject.author) <= -1) {
+						mail.push(dataobject);
 					}
 				}
 		  }
-		  res.render('mail', {mail: mail, muted: mute})
+		  res.render('mail', {mail: mail, muted: mute, pages: pages})
 		})
 	});
 });

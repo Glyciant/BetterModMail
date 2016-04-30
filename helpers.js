@@ -1,4 +1,5 @@
-var config = require("./config")
+var config = require("./config"),
+    restler = require("restler")
 
 var isMod = function(username) {
   return config.app.mods.indexOf(username) > -1;
@@ -15,7 +16,6 @@ var toDate = function(timestamp){
   var time = date + ' ' + month + ' ' + year;
   return time;
 }
-
 
 module.exports = {
   isMod: isMod,

@@ -1,18 +1,18 @@
 {% include "./header.html"%}
-  <div class="row white-text">
-    <div class="input-field col s3">
-      <input id="user" type="text" class="validate">
-      <label for="user">User</label>
-    </div>
-    <div class="input-field col s6">
-      <input id="reason" type="text" class="validate">
-      <label for="reason">Reason</label>
-    </div>
-    <div class="input-field col s3">
-      <a id="mute-user" class="btn grey darken-1" data-mod="{{loggedin}}">Mute User</a>
+  <div class="row">
+    <div class="purple lighten-2 col s10 offset-s1" style="margin-bottom: 15px; margin-top: 15px; padding: 5px; border-radius: 15px;">
+      <div class="input-field col s3">
+        <input id="user" type="text" class="validate" placeholder="User">
+      </div>
+      <div class="input-field col s6">
+        <input id="reason" type="text" class="validate" placeholder="Reason">
+      </div>
+      <div class="input-field col s3">
+        <a id="mute-user" class="btn purple darken-4" data-mod="{{loggedin}}">Mute User</a>
+      </div>
     </div>
   </div>
-  <table class="white-text responsive-table">
+  <table class="responsive-table">
     <thead>
       <th>Date</th>
       <th>User</th>
@@ -26,7 +26,7 @@
         <td>{{muted.id}}</td>
         <td>{{muted.mod}}</td>
         <td>{{muted.reason}}</td>
-        <td><a href="javascript:;" class="btn grey lighten-4 black-text" data-user="{{muted.id}}" id="unmute"><i class="large material-icons">done</i></a></td>
+        <td><a href="javascript:;" class="btn purple darken-4" data-user="{{muted.id}}" id="unmute"><i class="large material-icons">done</i></a></td>
       {%endfor%}
     </tbody>
   </table>

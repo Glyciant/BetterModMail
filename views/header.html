@@ -9,30 +9,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/6.0.0/markdown-it.js"></script>
   </head>
-  <body class="grey darken-3">
+  <body class="purple lighten-4">
     <div class="nav">
       {%if loggedin%}
-      <ul id="dropdown-content-1" class="dropdown-content grey darken-1">
-        <li><a class="white-text" href="/mail/all/open/">Open</a></li>
-        <li><a class="white-text" href="/mail/all/closed/">Closed</a></li>
-        <li><a class="white-text" href="/mail/all/all">All</a></li>
-      </ul>
-      <ul id="dropdown-content-2" class="dropdown-content grey">
-        <li><a class="white-text" href="/mail/{{loggedin}}/open/">Open</a></li>
-        <li><a class="white-text" href="/mail/{{loggedin}}/closed/">Closed</a></li>
-        <li><a class="white-text" href="/mail/{{loggedin}}/all">All</a></li>
-      </ul>
       <ul id="dropdown-logout" class="dropdown-content grey">
         <li><a class="white-text" href="/auth/logout/">Logout</a></li>
       </ul>
       {%endif%}
-      <nav class="grey darken-4">
+      <nav class="purple darken-2">
         <div class="nav-wrapper">
           <ul class="center">
             <li><a href="/">Home</a></li>
-            {%if loggedin%}
-            <li><a class="dropdown-button" href="#!" data-activates="dropdown-content-1">All Mail</a></li>
-            <li><a class="dropdown-button" href="#!" data-activates="dropdown-content-2">My Mail</a></li>
+            {%if loggedin && isMod%}
+            <li><a href="/mail/">View Messages</a></li>
             <li><a href="/compose/">Compose Message</a></li>
             <li><a href="/mute/">Muted Users</a></li>
             {%endif%}

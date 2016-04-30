@@ -15,11 +15,7 @@ schema.mail = {
   id: type.string(),
   tags: type.string(),
   assigned_to: type.string(),
-  author: type.string(),
-  subject: type.string(),
-  body: type.string(),
   open: type.boolean(),
-  date: type.number(),
 };
 
 schema.mute = {
