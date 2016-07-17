@@ -16,6 +16,6 @@ config.auth.secret = "";
 config.auth.redirect = config.app.baseurl + "/auth/login/";
 config.auth.authurl = 'https://www.reddit.com/api/v1/authorize?client_id=' + config.auth.cid + '&response_type=code&state=BETTERMODMAILAUTHSYSTEMSTATE&redirect_uri=' + config.auth.redirect + '&duration=permanent&scope=identity,privatemessages';
 
-config.app.mods = ["distortednet","MellowNebula","BoomLiam","conceptional","laagone","Heep123","Decicus","sargasm_gaming","Zcotticus"]
+config.app.mods = ["Heep123","BoomLiam","MellowNebula","conceptional","laagone","Zcotticus","Decicus","sargasm_gaming","SaaiTV"];
 
 module.exports = config
